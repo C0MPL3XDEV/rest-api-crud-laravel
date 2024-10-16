@@ -60,4 +60,38 @@ class ProductController extends Controller
             'data' => new ProductResource($product)
         ]);
     }
+
+    public function update(Request $request, Product $product) {
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required | string | max:255',
+            'description' => 'required | string | max:255',
+            'price' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => "All fields are mandatory",
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $product->update([
+            'name'=>$request->name,
+            'description'=>$request->description,
+            'price'=>$request->price,
+        ]);
+
+        return response()->json([
+            'message' => "Product Updated Successfully",
+            'data' => new ProductResource($product)
+        ]);
+    }
+
+    public function destroy(Product $product) {
+        $product->delete();
+        return response()->json([
+            'message' => "Product Deleted Successfully",
+        ]);
+    }
 }

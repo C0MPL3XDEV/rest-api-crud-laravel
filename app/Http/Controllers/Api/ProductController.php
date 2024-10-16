@@ -52,4 +52,12 @@ class ProductController extends Controller
         ], 200);
 
     }
+
+    // Method to show the data of one Product specified with ID
+    public function show(Product $product) {
+        return response()->json([
+            'message' => "Product Found",
+            'data' => new ProductResource($product)
+        ]);
+    }
 }

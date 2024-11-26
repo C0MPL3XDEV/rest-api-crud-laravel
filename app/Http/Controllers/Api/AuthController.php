@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function login(Request $request) :JsonResponse
+    public function login(Request $request): JsonResponse
     {
         $request->validate([
             'email' => 'required|string|email|max:255',
@@ -27,12 +27,12 @@ class AuthController extends Controller
             ], 401);
         }
 
-        $token = $user->createToken($user->name."Auth-Token")->plainTextToken;
+        $token = $user->createToken("Auth-Token")->plainTextToken;
 
         return response()->json([
             'message'=>'Login Successful',
             'token_type' => 'Bearer',
-            'token' => $token
+            'token' => $token,
         ], 200);
     }
 
@@ -52,7 +52,7 @@ class AuthController extends Controller
 
         if ($user) {
 
-            $token = $user->createToken($user->name."Auth-Token")->plainTextToken;
+            $token = $user->createToken("Auth-Token", ['*'], now()->addWeek())->plainTextToken; // Add Expiration Date for Token
 
             return response()->json([
                 'message'=>'Registration Successful',
@@ -72,7 +72,7 @@ class AuthController extends Controller
         $user = User::where('id', $request->user()->id)->first();
 
         if ($user) {
-            $user->tokens()->delete();
+            $user->tokens()->currentAccessToken()->delete(); // Delete only the current token for the current user;
 
             return response()->json([
                 'message' => 'Logged out Successfully'

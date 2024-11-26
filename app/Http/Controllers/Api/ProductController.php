@@ -29,6 +29,11 @@ class ProductController extends Controller
             'name' => 'required | string | max:255',
             'description' => 'required | string | max:255',
             'price' => 'required',
+            'date' => 'nullable | string',
+            'client_name' => 'nullable | string | max:255',
+            'client_image' => 'nullable | string',
+            'deadline_date' => 'nullable | string',
+            'status' => 'nullable | string | max:255',
         ]);
 
         if ($validator->fails()) {
@@ -41,9 +46,14 @@ class ProductController extends Controller
         // Execute the query to create the new record
 
         $product = Product::create([
-           'name' => $request->name,
-           'description' => $request->description,
-           'price' => $request->price,
+            'name' => $request->name,
+            'description' => $request->description,
+            'price' => $request->price,
+            'date' => $request->date,
+            'client_name' => $request->client_name,
+            'client_image' => $request->client_image,
+            'deadline_date' => $request->deadline_date,
+            'status' => $request->status
         ]);
 
         return response()->json([
@@ -67,6 +77,11 @@ class ProductController extends Controller
             'name' => 'required | string | max:255',
             'description' => 'required | string | max:255',
             'price' => 'required',
+            'date' => 'required | string',
+            'client_name' => 'required | string | max:255',
+            'client_image' => 'required | string',
+            'deadline_date' => 'required | string',
+            'status' => 'required | string | max:255',
         ]);
 
         if ($validator->fails()) {
@@ -77,9 +92,14 @@ class ProductController extends Controller
         }
 
         $product->update([
-            'name'=>$request->name,
-            'description'=>$request->description,
-            'price'=>$request->price,
+            'name' => $request->name,
+            'description' => $request->description,
+            'price' => $request->price,
+            'date' => $request->date,
+            'client_name' => $request->client_name,
+            'client_image' => $request->client_image,
+            'deadline_date' => $request->deadline_date,
+            'status' => $request->status
         ]);
 
         return response()->json([

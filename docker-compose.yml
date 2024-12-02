@@ -1,0 +1,65 @@
+services:
+    web:
+        image: carminedev/laravel-docker:latest
+        container_name: api-docker
+        ports:
+            -   "8080:80"
+            -   "443:443" #FUTURE PORT FOR SSL
+        environment:
+            DB_HOST: db
+            DB_DATABASE: ${DB_DATABASE}
+            DB_USERNAME: ${DB_USERNAME}
+            DB_PASSWORD: ${DB_PASSWORD}
+            DB_CONNECTION: ${DB_CONNECTION}
+
+        volumes:
+            -   ./:/var/www/html/laravel-api-crud/
+        depends_on:
+            -   db
+        #command: >
+            #sh -c "php artisan migrate --force && apache2-foreground"
+    db:
+        image: mysql:latest
+        container_name: db-docker
+        environment:
+            MYSQL_DATABASE: ${DB_DATABASE}
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+        ports:
+            -   "3306:3306"
+        volumes:
+            -   db-data:/var/lib/mysql
+
+    phpmyadmin:
+        image: phpmyadmin
+        container_name: phpmyadmin-docker
+        depends_on:
+            -   db
+        ports:
+            -   "8081:80"
+        environment:
+            PMA_HOST: db
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    angular:
+        image: carminedev/docker-angular:latest
+        container_name: angular-app
+        depends_on:
+            -   web
+        ports:
+            -   "4200:80"
+        # noinspection ComposeUnknownKeys
+        develop:
+            watch:
+                -   action: rebuild
+                    path: /home/complexdev/Downloads/angular-app/src/package/package.json
+                    target: /app
+                    ignore:
+                        - node_modules/
+                -   action: rebuild
+                    path: package.json
+
+        volumes:
+            -    /home/complexdev/Downloads/angular-app/src/package:/app
+            -   /home/complexdev/Downloads/angular-app/src/package/node_modules:/app/node_module
+
+volumes:
+    db-data:

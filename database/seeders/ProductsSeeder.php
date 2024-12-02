@@ -16,7 +16,7 @@ class ProductsSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        for ($i = 0; $i < 10; $i++){
+        for ($i = 0; $i < 20; $i++){
             DB::table('products')->insert([
                 'name' => $faker->company . " " . $faker->numerify('Model ####'),
                 'description' => $faker->sentence(10),

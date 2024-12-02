@@ -69,10 +69,10 @@ class AuthController extends Controller
 
     public function logout(Request $request) :JsonResponse
     {
-        $user = User::where('id', $request->user()->id)->first();
+        $user = $request->user();
 
-        if ($user) {
-            $user->tokens()->currentAccessToken()->delete(); // Delete only the current token for the current user;
+        if ($user && $user->currentAccessToken()) {
+            $user->currentAccessToken()->delete(); // Delete only the current token for the current user;
 
             return response()->json([
                 'message' => 'Logged out Successfully'
